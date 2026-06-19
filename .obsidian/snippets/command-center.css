@@ -1,0 +1,527 @@
+/* ============================================================
+   COMMAND CENTER — Control Room Visual Theme
+   Clases: cc-shell, cc-hero, cc-kpis, cc-actions, cc-action,
+           cc-panel, cc-grid, cc-cell, cc-list, cc-metrics
+   ============================================================ */
+
+/* ── CSS LOADED badge (visible indicator) ── */
+.markdown-source-view.command-center::before,
+.markdown-preview-view.command-center::before {
+  content: "CC ONLINE";
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  z-index: 9999;
+  background: #4ade80;
+  color: #000;
+  font-family: monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 2px 8px;
+  border-radius: 3px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* ── Root: multi-mode support ── */
+.markdown-source-view.command-center,
+.markdown-preview-view.command-center,
+.command-center {
+  --cc-mono: var(--font-monospace, "Cascadia Code", "Fira Code", "JetBrains Mono", monospace);
+  --cc-ui: var(--font-interface, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  --cc-accent: var(--text-accent, #6c8cff);
+  --cc-border: var(--background-modifier-border, #2a2a3e);
+  --cc-bg-card: color-mix(in srgb, var(--background-secondary, #1a1a2e) 85%, transparent);
+  --cc-bg-body: var(--background-primary, #0d0d1a);
+  --cc-text: var(--text-normal, #e0e0e0);
+  --cc-dim: var(--text-muted, #666);
+  --cc-green: #4ade80;
+  --cc-cyan: #22d3ee;
+  --cc-yellow: #facc15;
+  --cc-purple: #c084fc;
+  --cc-red: #f87171;
+  --cc-orange: #fb923c;
+  --cc-radius: 8px;
+
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem 1.75rem;
+  font-family: var(--cc-ui);
+  color: var(--cc-text);
+  background: var(--cc-bg-body);
+}
+
+/* ── Reset markdown bleed ── */
+.command-center .markdown-preview-view,
+.command-center .markdown-source-view {
+  background: transparent !important;
+}
+
+.command-center .cm-s-obsidian {
+  background: transparent !important;
+}
+
+.command-center .markdown-preview-section {
+  max-width: 100% !important;
+}
+
+/* ── Hide default markdown H1 (we render our own) ── */
+.command-center h1 {
+  display: none;
+}
+
+/* ============================================
+   HERO — System header bar
+   ============================================ */
+.command-center .cc-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin: 0 0 1.25rem 0;
+  background: var(--cc-bg-card);
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  border-left: 3px solid var(--cc-accent);
+}
+
+.command-center .cc-hero-title {
+  font-family: var(--cc-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cc-text);
+  margin: 0;
+}
+
+.command-center .cc-hero-title span {
+  color: var(--cc-accent);
+}
+
+.command-center .cc-hero-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--cc-mono);
+  font-size: 0.7rem;
+  color: var(--cc-dim);
+  letter-spacing: 0.05em;
+}
+
+.command-center .cc-hero-status .led {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cc-green);
+  box-shadow: 0 0 6px var(--cc-green);
+  animation: cc-pulse 2s ease-in-out infinite;
+}
+
+@keyframes cc-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.command-center .cc-hero-time {
+  font-family: var(--cc-mono);
+  font-size: 0.75rem;
+  color: var(--cc-dim);
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   ACTIONS — Quick action button grid
+   ============================================ */
+.command-center .cc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 1rem 0;
+}
+
+.command-center .cc-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 1rem 0.75rem;
+  border-radius: var(--cc-radius);
+  border: 1px solid var(--cc-border);
+  background: var(--cc-bg-card);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--cc-ui);
+  user-select: none;
+  min-height: 70px;
+  position: relative;
+  overflow: hidden;
+  /* Crece igual que los KPI cards para llenar el ancho disponible */
+  flex: 1 1 180px;
+  box-sizing: border-box;
+}
+
+.command-center .cc-action::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--cc-action-accent, var(--cc-accent));
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.command-center .cc-action:hover {
+  transform: translateY(-2px);
+  border-color: var(--cc-action-accent, var(--cc-accent));
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+}
+
+.command-center .cc-action:hover::before {
+  opacity: 1;
+}
+
+.command-center .cc-action:active {
+  transform: translateY(0);
+}
+
+.command-center .cc-action-label {
+  font-family: var(--cc-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--cc-action-accent, var(--cc-text));
+  line-height: 1.2;
+  text-align: center;
+}
+
+.command-center .cc-action-hint {
+  font-size: 0.62rem;
+  color: var(--cc-dim);
+  letter-spacing: 0.03em;
+}
+
+/* ── Action color variants (set via inline style) ── */
+.command-center .cc-action[data-color="green"]  { --cc-action-accent: var(--cc-green); }
+.command-center .cc-action[data-color="cyan"]   { --cc-action-accent: var(--cc-cyan); }
+.command-center .cc-action[data-color="yellow"] { --cc-action-accent: var(--cc-yellow); }
+.command-center .cc-action[data-color="purple"] { --cc-action-accent: var(--cc-purple); }
+.command-center .cc-action[data-color="orange"] { --cc-action-accent: var(--cc-orange); }
+
+/* ============================================
+   KPIS — Metrics strip
+   ============================================ */
+.command-center .cc-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.6rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.command-center .cc-kpi {
+  text-align: center;
+  padding: 0.65rem 0.5rem;
+  border-radius: var(--cc-radius);
+  border: 1px solid var(--cc-border);
+  background: var(--cc-bg-card);
+}
+
+.command-center .cc-kpi-value {
+  font-family: var(--cc-mono);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--cc-accent);
+  line-height: 1;
+  margin: 0 0 0.2rem 0;
+}
+
+.command-center .cc-kpi-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cc-dim);
+}
+
+/* ── KPI color variants ── */
+.command-center .cc-kpi[data-color="green"]  .cc-kpi-value { color: var(--cc-green); }
+.command-center .cc-kpi[data-color="cyan"]   .cc-kpi-value { color: var(--cc-cyan); }
+.command-center .cc-kpi[data-color="yellow"] .cc-kpi-value { color: var(--cc-yellow); }
+.command-center .cc-kpi[data-color="purple"] .cc-kpi-value { color: var(--cc-purple); }
+
+/* ============================================
+   PANEL — Generic section container
+   ============================================ */
+.command-center .cc-panel {
+  margin: 0 0 1.5rem 0;
+}
+
+.command-center .cc-panel-header {
+  font-family: var(--cc-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cc-accent);
+  border-bottom: 1px solid var(--cc-border);
+  padding: 0 0 0.35rem 0;
+  margin: 0 0 0.75rem 0;
+}
+
+/* ============================================
+   GRID — 2×2 technical areas
+   ============================================ */
+.command-center .cc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.65rem;
+  margin: 0 0 1.5rem 0;
+}
+
+@media (max-width: 900px) {
+  .command-center .cc-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .command-center .cc-grid { grid-template-columns: 1fr; }
+}
+
+.command-center .cc-cell {
+  padding: 0.75rem 1rem;
+  border-radius: var(--cc-radius);
+  border: 1px solid var(--cc-border);
+  background: var(--cc-bg-card);
+  transition: border-color 0.15s ease;
+}
+
+.command-center .cc-cell:hover {
+  border-color: var(--cc-accent);
+}
+
+.command-center .cc-cell-title {
+  font-family: var(--cc-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cc-accent);
+  margin: 0 0 0.4rem 0;
+  padding: 0 0 0.3rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--cc-border) 60%, transparent);
+}
+
+.command-center .cc-cell-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.command-center .cc-cell-content a.internal-link {
+  font-family: var(--cc-mono);
+  font-size: 0.68rem;
+  padding: 0.2rem 0.5rem;
+  background: color-mix(in srgb, var(--background-primary, #0d0d1a) 60%, transparent);
+  border: 1px solid var(--cc-border);
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--cc-text);
+  white-space: nowrap;
+  transition: all 0.12s ease;
+}
+
+.command-center .cc-cell-content a.internal-link:hover {
+  border-color: var(--cc-accent);
+  color: var(--cc-accent);
+  background: color-mix(in srgb, var(--background-primary, #0d0d1a) 40%, transparent);
+}
+
+/* ============================================
+   Dataview table styling
+   ============================================ */
+.command-center .dataview.table {
+  margin: 0 0 1.5rem 0;
+}
+
+.command-center .dataview.table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.command-center .dataview.table th {
+  font-family: var(--cc-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cc-accent);
+  background: var(--cc-bg-card);
+  border-bottom: 2px solid var(--cc-accent);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+}
+
+.command-center .dataview.table td {
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid var(--cc-border);
+  vertical-align: top;
+}
+
+.command-center .dataview.table tr:hover td {
+  background: var(--cc-bg-card);
+}
+
+/* Tasks list styling */
+.command-center .dataview.result-group,
+.command-center .block-language-dataview ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.command-center .dataview.result-group li,
+.command-center .block-language-dataview ul li {
+  font-size: 0.82rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--cc-border) 40%, transparent);
+}
+
+.command-center .dataview.result-group li:last-child,
+.command-center .block-language-dataview ul li:last-child {
+  border-bottom: none;
+}
+
+/* ============================================
+   LIST — Styled note list (Recente)
+   ============================================ */
+.command-center .cc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.command-center .cc-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--cc-border) 30%, transparent);
+  font-size: 0.78rem;
+  transition: background 0.1s ease;
+}
+
+.command-center .cc-list li:hover {
+  background: var(--cc-bg-card);
+}
+
+.command-center .cc-list a.internal-link {
+  text-decoration: none;
+  color: var(--cc-text);
+  font-weight: 500;
+}
+
+.command-center .cc-list a.internal-link:hover {
+  color: var(--cc-accent);
+}
+
+.command-center .cc-list .cc-list-meta {
+  font-family: var(--cc-mono);
+  font-size: 0.62rem;
+  color: var(--cc-dim);
+  white-space: nowrap;
+}
+
+/* ============================================
+   METRICS — Compact stats table
+   ============================================ */
+.command-center .cc-metrics {
+  margin: 0 0 1rem 0;
+}
+
+.command-center .cc-metrics table {
+  width: auto;
+  min-width: 300px;
+  border-collapse: collapse;
+}
+
+.command-center .cc-metrics td {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--cc-border) 30%, transparent);
+}
+
+.command-center .cc-metrics td:first-child {
+  font-family: var(--cc-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cc-dim);
+}
+
+.command-center .cc-metrics td:last-child {
+  font-family: var(--cc-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cc-accent);
+  text-align: right;
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+.command-center .cc-footer {
+  font-family: var(--cc-mono);
+  font-size: 0.6rem;
+  color: var(--cc-dim);
+  text-align: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--cc-border);
+  margin-top: 1.5rem;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
+/* ── Banner spacing reduction ── */
+.command-center .obsidian-banner-wrapper {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+.command-center .obsidian-banner-wrapper > .markdown-preview-section {
+  margin-top: -2.5rem !important;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+  .command-center {
+    padding: 0.75rem 1rem;
+  }
+
+  .command-center .cc-actions {
+    gap: 0.5rem;
+  }
+
+  .command-center .cc-action {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-height: 60px;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .command-center .cc-kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .command-center .cc-hero-title {
+    font-size: 0.95rem;
+  }
+
+  .command-center .cc-grid {
+    grid-template-columns: 1fr;
+  }
+}

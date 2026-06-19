@@ -1,0 +1,273 @@
+/* Dashboard Styles for Obsidian */
+/* Compatible with light and dark themes using native CSS variables */
+
+/* Base dashboard layout */
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: var(--font-interface, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  color: var(--text-normal);
+  background: var(--background-primary);
+}
+
+/* Header styling */
+.dashboard h1 {
+  color: var(--text-accent);
+  border-bottom: 2px solid var(--background-modifier-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard h2 {
+  color: var(--text-normal);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+.dashboard h3 {
+  color: var(--text-muted);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+/* Quick access cards */
+.dashboard .quick-access {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.dashboard .quick-access a {
+  display: block;
+  padding: 1rem;
+  background: var(--background-secondary);
+  border-radius: 8px;
+  text-decoration: none;
+  border: 1px solid var(--background-modifier-border);
+  transition: background 0.2s ease;
+}
+
+.dashboard .quick-access a:hover {
+  background: var(--background tertiary);
+  transform: translateY(-2px);
+}
+
+.dashboard .quick-access .section-title {
+  font-weight: 600;
+  color: var(--text-accent);
+  margin-bottom: 0.5rem;
+}
+
+/* Task sections */
+.dashboard .tasks-section {
+  background: var(--background-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.dashboard .tasks-section h4 {
+  margin-top: 0;
+  color: var(--text-accent);
+}
+
+.dashboard .tasks-section .task-list {
+  margin: 0.5rem 0;
+}
+
+/* Projects table */
+.dashboard .projects-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.dashboard .projects-table th,
+.dashboard .projects-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.dashboard .projects-table th {
+  background: var(--background-secondary);
+  font-weight: 600;
+  color: var(--text-accent);
+}
+
+.dashboard .projects-table tr:hover {
+  background: var(--background-modifier-hover);
+}
+
+/* Technical areas grid */
+.dashboard .tech-areas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.dashboard .tech-area {
+  background: var(--background-secondary);
+  border-radius: 8px;
+  padding: 1.25rem;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.dashboard .tech-area h4 {
+  color: var(--text-accent);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.dashboard .tech-area ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dashboard .tech-area li {
+  margin: 0.5rem 0;
+}
+
+.dashboard .tech-area a {
+  text-decoration: none;
+  color: var(--text-normal);
+  font-size: 0.95rem;
+}
+
+.dashboard .tech-area a:hover {
+  color: var(--text-accent);
+  text-decoration: underline;
+}
+
+/* Recent notes section */
+.dashboard .recent-notes {
+  background: var(--background-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid var(--background-modifier-border);
+}
+
+/* Metrics table */
+.dashboard .metrics-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.dashboard .metrics-table th,
+.dashboard .metrics-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.dashboard .metrics-table th {
+  background: var(--background-secondary);
+}
+
+/* Plugin notes */
+.dashboard .plugin-note {
+  background: var(--background-secondary-alt);
+  border-left: 3px solid var(--text-warning);
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.9rem;
+}
+
+.dashboard .plugin-note strong {
+  color: var(--text-accent);
+}
+
+/* Commands block */
+.dashboard .commands {
+  background: var(--background-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-family: var(--font-monospace);
+  font-size: 0.85rem;
+  overflow-x: auto;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.dashboard .commands code {
+  background: var(--background-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+}
+
+/* Footer */
+.dashboard footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem;
+  }
+  
+  .dashboard .quick-access {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard .tech-areas {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dataview list overrides */
+.dashboard .dataview.list {
+  margin: 0.5rem 0;
+}
+
+.dashboard .dataview.list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dashboard .dataview.list th,
+.dashboard .dataview.list td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+/* Tasks plugin overrides */
+.dashboard .tasks-list {
+  margin: 0.5rem 0;
+}
+
+.dashboard .task-item {
+  padding: 0.25rem 0;
+  border-bottom: none;
+}
+
+/* Command Center — botones DataviewJS */
+.command-center .button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0.5rem 0;
+}
+
+/* Ensure compatibility with Obsidian variables */
+:root .dashboard {
+  --card-bg: var(--background-secondary);
+  --card-border: var(--background-modifier-border);
+  --card-hover: var(--background-modifier-hover);
+}

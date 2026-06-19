@@ -1,0 +1,20 @@
+.sisyphus/*
+01-Proyectos/*
+02-Daily-Logs/*
+03-Resúmenes/*
+04-Objetivos/*
+05-Notas/*
+07-Archivos/*.md
+07-Archivos/lecciones aprendidas/*
+
+# Imágenes y recursos
+*.png
+*.gif
+*.bmp
+*.svg
+00-Índice.md
+Home.md
+
+# Estado de la interfaz de Obsidian (cambios constantes)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
