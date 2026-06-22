@@ -3,5 +3,7 @@
     "dashboard",
     "command-center"
   ],
-  "showRibbon": true
+  "showRibbon": true,
+  "cssTheme": "Minimal",
+  "nativeMenus": true
 }

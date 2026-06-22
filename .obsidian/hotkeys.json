@@ -38,8 +38,7 @@
   "obsidian-tasks-plugin:edit-task": [
     {
       "modifiers": [
-        "Alt",
-        "Mod"
+        "Alt"
       ],
       "key": "T"
     }

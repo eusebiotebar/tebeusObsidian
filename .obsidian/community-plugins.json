@@ -9,5 +9,6 @@
   "templater-obsidian",
   "buttons",
   "obsidian-meta-bind-plugin",
-  "quickadd"
+  "quickadd",
+  "obsidian-excalidraw-plugin"
 ]
