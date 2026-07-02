@@ -16,5 +16,5 @@
   "livePreview": true,
   "propertiesInDocument": "source",
   "attachmentFolderPath": "./recursos",
-  "defaultViewMode": "source"
+  "defaultViewMode": "preview"
 }

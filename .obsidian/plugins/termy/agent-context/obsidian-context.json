@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "source": "termy",
-  "updatedAt": "2026-06-22T09:58:53.607Z",
+  "updatedAt": "2026-07-02T12:52:18.277Z",
   "vaultRoot": "C:/Users/Eusebio.Tebar/tebeusObs",
   "workspaceFolders": [
     "C:/Users/Eusebio.Tebar/tebeusObs"
@@ -14,30 +14,30 @@
   },
   "openFiles": [
     {
+      "filePath": "C:\\Users\\Eusebio.Tebar\\tebeusObs\\00-inbox\\sessions\\session-ses_203dbd91bffeOrQC7scJ0L8vlT-2026-07-02.md",
+      "vaultPath": "00-inbox/sessions/session-ses_203dbd91bffeOrQC7scJ0L8vlT-2026-07-02.md",
+      "fileUrl": "file:///C:/Users/Eusebio.Tebar/tebeusObs/00-inbox/sessions/session-ses_203dbd91bffeOrQC7scJ0L8vlT-2026-07-02.md",
+      "isActive": false
+    },
+    {
       "filePath": "C:\\Users\\Eusebio.Tebar\\tebeusObs\\Command Center.md",
       "vaultPath": "Command Center.md",
       "fileUrl": "file:///C:/Users/Eusebio.Tebar/tebeusObs/Command%20Center.md",
       "isActive": true
-    },
-    {
-      "filePath": "C:\\Users\\Eusebio.Tebar\\tebeusObs\\01-Proyectos\\0112-CANLog\\0112 - CANLog.md",
-      "vaultPath": "01-Proyectos/0112-CANLog/0112 - CANLog.md",
-      "fileUrl": "file:///C:/Users/Eusebio.Tebar/tebeusObs/01-Proyectos/0112-CANLog/0112%20-%20CANLog.md",
-      "isActive": false
     }
   ],
   "selection": {
     "text": "",
     "isEmpty": true,
     "from": {
-      "line": 149,
-      "ch": 43,
-      "offset": 6442
+      "line": 0,
+      "ch": 0,
+      "offset": 0
     },
     "to": {
-      "line": 149,
-      "ch": 43,
-      "offset": 6442
+      "line": 0,
+      "ch": 0,
+      "offset": 0
     }
   }
 }

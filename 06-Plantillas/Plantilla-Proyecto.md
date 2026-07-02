@@ -1,12 +1,15 @@
 ---
-title: Nombre del Proyecto
+title: "{{title}}"
 date: {{date}}
 tags:
   - proyecto
 status: active
+area: ""
 priority: high
 start-date: {{date}}
 due-date:
+path: '{{path}}'
+url: '{{url}}'
 ---
 
 # {{title}}
@@ -21,11 +24,11 @@ Cuál es el objetivo principal de este proyecto.
 **Estado actual:** {{status}}
 
 ## Tareas
-- [ ] 
-- [ ] 
+
+
 
 ## Hitos
-- [ ] 
+
 
 ## Recursos
 - [[Nota de recurso 1]]

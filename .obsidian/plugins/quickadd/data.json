@@ -75,6 +75,25 @@
           }
         ]
       }
+    },
+    {
+      "id": "macro_tarea_completada",
+      "name": "Tarea Completada",
+      "type": "Macro",
+      "command": true,
+      "macro": {
+        "id": "cmd_add_completed_1",
+        "name": "add_completed_task.js",
+        "commands": [
+          {
+            "type": "UserScript",
+            "name": "add_completed_task.js",
+            "path": "06-Plantillas/scripts/add_completed_task.js",
+            "id": "cmd_add_completed_1",
+            "settings": {}
+          }
+        ]
+      }
     }
   ],
   "inputPrompt": "single-line",

@@ -1,0 +1,16 @@
+{
+  "dragWithCtrl": "default",
+  "dragWithShift": "InlineLinkRelativeToHome",
+  "dragWithCtrlShift": "EmbedRelativeToHome",
+  "enableDragAndDrop": true,
+  "virtualDirectories": {
+    "0111FlowController": {}
+  },
+  "devices": {
+    "76f61741-6cf5-4250-8709-758dcf18ad27": {
+      "uuid": "76f61741-6cf5-4250-8709-758dcf18ad27",
+      "name": "ID114",
+      "os": "win32"
+    }
+  }
+}

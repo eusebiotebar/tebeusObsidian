@@ -41,7 +41,9 @@ $weekMeetings  = @()
 for ($d = 0; $d -lt 5; $d++) {
   $dow = $weekStart.AddDays($d)
   [string]$date = Get-Date $dow -Format "yyyy-MM-dd"
-  $p = Join-Path -Path $LogsDir -ChildPath ("{0}.md" -f $date)
+  $dYear = (Get-Date $dow).ToString("yyyy")
+  $dMonth = (Get-Date $dow).ToString("yyyy-MM")
+  $p = Join-Path -Path $LogsDir -ChildPath "$dYear/$dMonth/$date.md"
   if (-not (Test-Path $p)) { continue }
 
   $content = [System.IO.File]::ReadAllText($p, $utf8)

@@ -1,4 +1,4 @@
-﻿---
+---
 title: Daily Log
 date: {{date}}
 tags:
@@ -16,10 +16,15 @@ status: draft
 Breve descripción de cómo fue el día.
 
 ## Tareas Completadas
-- [ ]
+
+```tasks
+done {{date}}
+path does not include 02-Daily-Logs
+sort by done
+```
 
 ## Tareas Pendientes
-- [ ]
+
 
 ## Notas
 -

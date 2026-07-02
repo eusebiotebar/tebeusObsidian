@@ -11,8 +11,14 @@ $utf8 = [System.Text.UTF8Encoding]::new($true)
 $LogsDir = Join-Path -Path $VaultRoot -ChildPath $LogsPath
 if (-not (Test-Path $LogsDir)) { New-Item -ItemType Directory -Path $LogsDir | Out-Null }
 
+$Year = (Get-Date).ToString("yyyy")
+$Month = (Get-Date).ToString("yyyy-MM")
+$YearDir = Join-Path -Path $LogsDir -ChildPath $Year
+$MonthDir = Join-Path -Path $YearDir -ChildPath $Month
+if (-not (Test-Path $MonthDir)) { New-Item -ItemType Directory -Path $MonthDir -Force | Out-Null }
+
 $Today = (Get-Date).ToString("yyyy-MM-dd")
-$TodayPath = Join-Path -Path $LogsDir -ChildPath "$Today.md"
+$TodayPath = Join-Path -Path $MonthDir -ChildPath "$Today.md"
 if (Test-Path $TodayPath) { Remove-Item -Path $TodayPath -Force }
 
 # Build template with proper UTF-8 encoding using UTF8.GetString with byte arrays
@@ -72,7 +78,7 @@ $content = $lines -join "`n"
 Write-Host "Daily creado con fallback (UTF-8 BOM)"
 
 # Copy yesterday's tasks from the LAST daily (skip weekends/empty days)
-$allDailies = Get-ChildItem -Path $LogsDir -Filter "*.md" | Where-Object { $_.Name -ne "$Today.md" } | Sort-Object LastWriteTime -Descending
+$allDailies = Get-ChildItem -Path $LogsDir -Recurse -Filter "*.md" | Where-Object { $_.Name -ne "$Today.md" } | Sort-Object LastWriteTime -Descending
 
 $lastDaily = $null
 foreach ($d in $allDailies) {
@@ -117,7 +123,8 @@ if ($importTasks.Count -gt 0 -and (Test-Path $TodayPath)) {
 # Enlace al Daily anterior
 $LastDaily = $allDailies | Select-Object -First 1
 if ($LastDaily) {
-  $linkLine = "`n## Enlace al Daily anterior`n- [[02-Daily-Logs/$($LastDaily.Name)]]`n"
+  $relDir = $LastDaily.DirectoryName.Substring($LogsDir.Length + 1)
+  $linkLine = "`n## Enlace al Daily anterior`n- [[02-Daily-Logs/$relDir/$($LastDaily.Name)]]`n"
   [System.IO.File]::AppendAllText($TodayPath, $linkLine, $utf8)
   Write-Host "Enlace al daily anterior: $($LastDaily.Name)"
 }

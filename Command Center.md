@@ -84,9 +84,10 @@ const actions = dv.el("div", "", { cls: "cc-actions" });
 const btns = [
   { label: "✦ Nueva Tarea", hint: "quickadd macro", id: "quickadd:choice:macro_nueva_tarea", color: "green" },
   { label: "✦ Nuevo Objetivo", hint: "quickadd macro", id: "quickadd:choice:macro_nuevo_objetivo", color: "purple" },
-  { label: "📋 Daily Hoy", hint: `abrir ${dateStr}`, path: `02-Daily-Logs/${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}.md`, color: "yellow" },
+  { label: "📋 Daily Hoy", hint: `abrir ${dateStr}`, path: `02-Daily-Logs/${now.getFullYear()}/${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}/${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}.md`, color: "yellow" },
   { label: "✦ Añadir Proyecto", hint: "quickadd macro", id: "quickadd:choice:macro_nuevo_proyecto", color: "cyan" },
   { label: "📅 Nueva Reunión", hint: "quickadd macro", id: "quickadd:choice:macro_nueva_reunion", color: "orange" },
+  { label: "✅ Tarea Completada", hint: "añadir al daily", id: "quickadd:choice:macro_tarea_completada", color: "green" },
 ];
 // Iterate over each button definition and create a <button> element inside the actions container.
 for (const b of btns) {
@@ -150,60 +151,75 @@ for (const k of kpiData) {
 ## 📋 Gestión de Tareas (Flujo de Proyecto)
 
 > **Flujo recomendado:** Añade tareas en la sección `## Tareas` de cada proyecto.
-> Las tareas de proyecto se mostrarán aquí agrupadas por vencimiento.
-> Las completadas hoy desde Daily Logs aparecen al final.
+> Las tareas se muestran aquí agrupadas por vencimiento y proyecto.
 
-### ⏰ Vencidas
-```tasks
-not done
-path includes 01-Proyectos
-heading includes Tareas
-due before today
-sort by due
-hide backlink
-hide priority
-```
+```dataviewjs
+const today = dv.date('today');
+const yesterday = dv.date('today').minus({days:1});
 
-### 📅 Hoy
-```tasks
-not done
-path includes 01-Proyectos
-heading includes Tareas
-due today
-sort by due
-hide backlink
-hide priority
-```
+const projects = dv.pages('"01-Proyectos"')
+  .where(p => p.file.tasks.length > 0);
 
-### 🔜 Próximas
-```tasks
-not done
-path includes 01-Proyectos
-heading includes Tareas
-due after today
-sort by due
-hide backlink
-hide priority
-```
+// Collect all tasks with project info
+const allTasks = [];
+for (const p of projects) {
+  for (const t of p.file.tasks) {
+    if (t.completed) continue;
+    const taskText = t.text;
+    // Try to find due date from inline field or Tasks syntax
+    let due = null;
+    const dueMatch = taskText.match(/📅\s*(\d{4}-\d{2}-\d{2})/);
+    if (dueMatch) due = dv.date(dueMatch[1]);
+    else if (t.due) due = t.due;
+    
+    allTasks.push({
+      task: t,
+      text: taskText.replace(/📅\s*\d{4}-\d{2}-\d{2}/g, '').trim(),
+      project: p.file.link,
+      projectName: p.title || p.file.name,
+      due: due,
+      status: !due ? 'no-date' :
+              due < today ? 'overdue' :
+              due.day === today.day && due.month === today.month && due.year === today.year ? 'today' :
+              'upcoming'
+    });
+  }
+}
 
-### 📌 Sin fecha
-```tasks
-not done
-path includes 01-Proyectos
-heading includes Tareas
-no due date
-sort by due
-hide backlink
-hide priority
-```
+// Group by status
+const groups = {
+  overdue: allTasks.filter(t => t.status === 'overdue').sort((a,b) => a.due - b.due),
+  today: allTasks.filter(t => t.status === 'today'),
+  upcoming: allTasks.filter(t => t.status === 'upcoming').sort((a,b) => a.due - b.due),
+  'no-date': allTasks.filter(t => t.status === 'no-date'),
+};
 
-### ✅ Completadas Hoy (Daily Logs)
-```tasks
-done today
-path includes 02-Daily-Logs
-sort by done
-hide backlink
-hide priority
+const icons = { overdue: '⏰', today: '📅', upcoming: '🔜', 'no-date': '📌' };
+const labels = { overdue: 'Vencidas', today: 'Hoy', upcoming: 'Próximas', 'no-date': 'Sin fecha' };
+
+for (const [key, tasks] of Object.entries(groups)) {
+  if (tasks.length === 0) continue;
+  dv.header(3, `${icons[key]} ${labels[key]} (${tasks.length})`);
+  
+  // Group by project within each status
+  const byProject = {};
+  for (const t of tasks) {
+    const pname = t.projectName;
+    if (!byProject[pname]) byProject[pname] = { link: t.project, tasks: [] };
+    byProject[pname].tasks.push(t);
+  }
+  
+  let md = '';
+  for (const [pname, data] of Object.entries(byProject)) {
+    md += `**${data.link}**\n`;
+    for (const t of data.tasks) {
+      const dueStr = t.due ? ` — 📅 ${t.due.toFormat('dd/MM')}` : '';
+      md += `- [ ] ${t.text}${dueStr}\n`;
+    }
+    md += '\n';
+  }
+  dv.paragraph(md);
+}
 ```
 
 ## PROYECTOS ACTIVOS
@@ -216,42 +232,41 @@ SORT priority DESC, file.mtime DESC
 ```
 
 ```dataviewjs
-// ── TECHNICAL AREAS GRID ──
-const areas = dv.el("div", "", { cls: "cc-grid" });
-const areaData = [
-  { title: "CAN Bus & Protocolos", links: [
-    ["01-Proyectos/0101-CAN-Frame-Retransmision-Tool/0101-CAN_Frame_Retransmision_Tool", "0101 CAN Tool"],
-    ["01-Proyectos/0109-D429-MVB-CAN/0109 - D429 MVB - CAN", "0109 D429 MVB CAN"],
-    ["01-Proyectos/0112-CANLog/0112 - CANLog", "0112 CANLog"],
-  ]},
-  { title: "UDP & Networking", links: [
-    ["01-Proyectos/0108-Rodal-Controller-UDP-Datalogger/0108-Rodal Controller UDP Datalogger", "0108 Rodal UDP"],
-    ["01-Proyectos/Node-red-Dashboard/Node-red-Dashboard", "Node-RED"],
-    ["01-Proyectos/0108-Rodal-Controller-UDP-Datalogger/recursos/SRS-UDP-Datalog", "SRS UDP"],
-  ]},
-  { title: "STM32 & MCU", links: [
-    ["01-Proyectos/0106-Woolfspeed-MCU/0106-Woolfspeed-MCU", "0106 Woolfspeed"],
-    ["01-Proyectos/0100-STM32-RPi-Profibus-Gateway/0100 - STM32 RPi - Profibus Gateway", "0100 STM32 Gateway"],
-  ]},
-  { title: "RPi & Linux", links: [
-    ["01-Proyectos/0107-Scotty-Control-Unit/0107-Scotty-Control-Unit", "0107 Scotty CU"],
-    ["01-Proyectos/Gateway-Web-Controller/Gateway-Web-Controller", "Gateway Web"],
-    ["01-Proyectos/0100-STM32-RPi-Profibus-Gateway/recursos/SRS-RPI2STM-COM", "RPI2STM COM"],
-  ]},
-  { title: "Testing & Tools", links: [
-    ["01-Proyectos/BusMaster/BusMaster", "BusMaster"],
-    ["01-Proyectos/ExcelMVB2CAN/ExcelMVB2CAN", "Excel MVB2CAN"],
-  ]},
-  { title: "Documentación", links: [
-    ["01-Proyectos/Frame-DrawIO-Template/Frame-DrawIO-Template", "DrawIO Frames"],
-  ]},
+// ── TECHNICAL AREAS GRID (dinámico) ──
+const all = dv.pages('"01-Proyectos"')
+  .where(p => (p.file.tags || []).includes("#proyecto") && p.area);
+
+// Agrupar por area
+const byArea = {};
+for (const p of all) {
+  const area = p.area;
+  if (!area) continue;
+  if (!byArea[area]) byArea[area] = [];
+  byArea[area].push(p);
+}
+
+// Orden de áreas predefinido
+const areaOrder = [
+  "CAN Bus & Protocolos",
+  "UDP & Networking",
+  "STM32 & MCU",
+  "Simulink & MCU",
+  "RPi & Linux",
+  "Testing & Tools",
+  "Documentación",
 ];
-for (const area of areaData) {
+const sortedAreas = Object.keys(byArea).sort(
+  (a, b) => (areaOrder.indexOf(a) - areaOrder.indexOf(b))
+);
+
+const areas = dv.el("div", "", { cls: "cc-grid" });
+for (const areaName of sortedAreas) {
+  const projects = byArea[areaName];
   const cell = areas.createEl("div", { cls: "cc-cell" });
-  const title = cell.createEl("div", { cls: "cc-cell-title", text: area.title });
+  const title = cell.createEl("div", { cls: "cc-cell-title", text: areaName });
   const content = cell.createEl("div", { cls: "cc-cell-content" });
-  for (const [path, alias] of area.links) {
-    content.appendChild(dv.span(`[[${path}|${alias}]]`));
+  for (const p of projects) {
+    content.appendChild(dv.span(`[[${p.file.path}|${p.title || p.file.name}]]`));
     content.createEl("br");
   }
 }
