@@ -165,6 +165,7 @@ const allTasks = [];
 for (const p of projects) {
   for (const t of p.file.tasks) {
     if (t.completed) continue;
+    if (t.status === "-") continue; // tareas canceladas (Tasks: [-])
     const taskText = t.text;
     // Try to find due date from inline field or Tasks syntax
     let due = null;

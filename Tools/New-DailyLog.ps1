@@ -123,7 +123,7 @@ if ($importTasks.Count -gt 0 -and (Test-Path $TodayPath)) {
 # Enlace al Daily anterior
 $LastDaily = $allDailies | Select-Object -First 1
 if ($LastDaily) {
-  $relDir = $LastDaily.DirectoryName.Substring($LogsDir.Length + 1)
+  $relDir = $LastDaily.DirectoryName.Substring($LogsDir.Length + 1) -replace '\\', '/'
   $linkLine = "`n## Enlace al Daily anterior`n- [[02-Daily-Logs/$relDir/$($LastDaily.Name)]]`n"
   [System.IO.File]::AppendAllText($TodayPath, $linkLine, $utf8)
   Write-Host "Enlace al daily anterior: $($LastDaily.Name)"
